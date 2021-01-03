@@ -164,7 +164,7 @@ class Overseerr(object):
         if (tmdb_id is not None):
           movie_data = self._request_connection(f"movie/{tmdb_id}").json()
           return {"Name" :movie_data['title'], "Type" : "movie", "RequestedBy" : request['requestedBy']['username'] }
-        return None
+        return {"Name" :None, "Type" : None, "RequestedBy" : None }
 
 
     @property
@@ -180,7 +180,7 @@ class Overseerr(object):
             tv_data = self._request_connection(f"tv/{tmdb_id}").json()
             return {"Name" :tv_data['name'], "Type" : "tv", "RequestedBy" : request['requestedBy']['username'] }
 
-        return None
+        return {"Name" :None, "Type" : None, "RequestedBy" : None }
 
     @property
     def tv_requests(self):
@@ -226,7 +226,7 @@ class Overseerr(object):
             movie_data = self._request_connection(f"movie/{tmdb_id}").json()
              return {"Name" :movie_data['title'], "Type" : "movie", "RequestedBy" : request['requestedBy']['username'] }
 
-        return None
+        return {"Name" :None, "Type" : None, "RequestedBy" : None }
 
     @property
     def last_total_request(self):
