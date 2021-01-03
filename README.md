@@ -19,7 +19,7 @@ pip install pyoverseerr
 
 #### Creating an object of your Overseerr instance
 
-**Note:** You have to supply either a `password` or an `api_key` to successfully authenticate. The `api_key` will take precedence if both are supplied.
+**Note:** You have to supply an `api_key` to successfully authenticate.
 
 ```python
 import pyoverseerr
@@ -29,8 +29,6 @@ overseerr = pyoverseerr.Overseerr(
     host="192.168.1.120",
     port="5000",
     urlbase="overseerr/",
-    username="MyUsername",
-    password="MyPassword",
     api_key="pixf64thuh2m7kbwwgkqp52yznbj4oyo"
 )
 ```
@@ -65,14 +63,12 @@ total = overseerr.total_requests
 ```python
 movie_search = overseerr.search_movie("Movie Name")  
 tv_search = overseerr.search_tv("TV show name")
-music_search = overseerr.search_music_album("Album name")
 ```
 
 #### Requesting
 ```python
 overseerr.request_movie("theMovieDbId")
 overseerr.request_tv("theTvDbId", request_latest=True)
-overseerr.request_music("foreignAlbumId")
 ```
 
 # License

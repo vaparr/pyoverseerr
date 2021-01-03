@@ -163,7 +163,7 @@ class Overseerr(object):
 
         if (tmdb_id is not None):
           movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-          return movie_data['title']
+          return {"Name" :movie_data['title'], "Type" : "movie", "RequestedBy" : request['requestedBy']['username'] }
         return None
 
 
@@ -178,7 +178,7 @@ class Overseerr(object):
 
         if (tmdb_id is not None):
             tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-            return tv_data['name']
+            return {"Name" :tv_data['name'], "Type" : "tv", "RequestedBy" : request['requestedBy']['username'] }
 
         return None
 
@@ -220,11 +220,11 @@ class Overseerr(object):
         if (tmdb_id is not None):
           if request['type'] == "tv":
             tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-            return tv_data['name']
+            return {"Name" :tv_data['name'], "Type" : "tv", "RequestedBy" : request['requestedBy']['username'] }            
 
           if request['type'] == "movie":
             movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-            return movie_data['title']
+             return {"Name" :movie_data['title'], "Type" : "movie", "RequestedBy" : request['requestedBy']['username'] }
 
         return None
 
@@ -239,11 +239,11 @@ class Overseerr(object):
         if (tmdb_id is not None):
           if request['type'] == "tv":
             tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-            return tv_data['name']
+              return {"Name" :tv_data['name'], "Type" : "tv", "RequestedBy" : request['requestedBy']['username'] }      
 
           if request['type'] == "movie":
             movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-            return movie_data['title']
+             return {"Name" :movie_data['title'], "Type" : "movie", "RequestedBy" : request['requestedBy']['username'] }
 
         return None
 
