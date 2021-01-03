@@ -153,6 +153,36 @@ class Overseerr(object):
         return i
 
     @property
+    def last_movie_request(self):
+        requests = self._request_connection("Request").json()['results']
+        tmdb_id = None
+        for request in requests:
+          if request['type'] == "movie":
+            tmdb_id = request['media']['tmdbId']
+            break
+
+        if (tmdb_id is not None):
+          movie_data = self._request_connection(f"movie/{tmdb_id}").json()
+          return movie_data['title']
+        return None
+
+
+    @property
+    def last_tv_request(self):
+        requests = self._request_connection("Request").json()['results']
+        tmdb_id = None
+        for request in requests:
+          if request['type'] == "tv":
+            tmdb_id = request['media']['tmdbId']
+            break
+
+        if (tmdb_id is not None):
+            tv_data = self._request_connection(f"tv/{tmdb_id}").json()
+            return tv_data['name']
+
+        return None
+
+    @property
     def tv_requests(self):
         requests = self._request_connection("Request").json()['results']
         i = 0
@@ -178,6 +208,45 @@ class Overseerr(object):
     @property
     def pending_requests(self):
         return len(self._request_connection("Request?filter=pending").json()['results'])
+
+    @property
+    def last_pending_request(self):
+        requests = self._request_connection("Request?filter=pending").json()['results']
+        tmdb_id = None
+        for request in requests:
+          tmdb_id = request['media']['tmdbId']
+          break
+
+        if (tmdb_id is not None):
+          if request['type'] == "tv":
+            tv_data = self._request_connection(f"tv/{tmdb_id}").json()
+            return tv_data['name']
+
+          if request['type'] == "movie":
+            movie_data = self._request_connection(f"movie/{tmdb_id}").json()
+            return movie_data['title']
+
+        return None
+
+    @property
+    def last_total_request(self):
+        requests = self._request_connection("Request").json()['results']
+        tmdb_id = None
+        for request in requests:
+          tmdb_id = request['media']['tmdbId']
+          break
+
+        if (tmdb_id is not None):
+          if request['type'] == "tv":
+            tv_data = self._request_connection(f"tv/{tmdb_id}").json()
+            return tv_data['name']
+
+          if request['type'] == "movie":
+            movie_data = self._request_connection(f"movie/{tmdb_id}").json()
+            return movie_data['title']
+
+        return None
+
 
     @property
     def approved_requests(self):

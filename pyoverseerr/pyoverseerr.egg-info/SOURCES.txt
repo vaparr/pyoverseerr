@@ -1,0 +1,8 @@
+README.md
+setup.py
+pyoverseerr/pyoverseerr.py
+pyoverseerr/pyoverseerr.egg-info/PKG-INFO
+pyoverseerr/pyoverseerr.egg-info/SOURCES.txt
+pyoverseerr/pyoverseerr.egg-info/dependency_links.txt
+pyoverseerr/pyoverseerr.egg-info/requires.txt
+pyoverseerr/pyoverseerr.egg-info/top_level.txt
