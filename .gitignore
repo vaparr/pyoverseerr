@@ -1,0 +1,5 @@
+dist/
+build/
+upload.sh
+test.py
+/pyoverseerr.egg-info/
