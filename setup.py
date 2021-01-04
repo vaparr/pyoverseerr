@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pyoverseerr",
-    version="0.1.14",
+    version="0.1.15",
     url="https://github.com/vaparr/pyoverseerr",
     author="Vaparr",
     author_email="Vaparr@vaparr.org",

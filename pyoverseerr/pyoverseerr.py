@@ -99,6 +99,10 @@ class Overseerr(object):
         print(data)
         request(lambda: self._request_connection(path="request", post_data=data))
 
+    def update_request(self, request_id, status):
+        """Status = pending/approve/decline/available"""
+        request(lambda: self._request_connection(path=f"request/{request_id}/{status}"))
+
     def request_tv(self, tv_id, request_all=False, request_latest=False, request_first=False):
 
         tv_data = self._request_connection(f"tv/{tv_id}").json()
