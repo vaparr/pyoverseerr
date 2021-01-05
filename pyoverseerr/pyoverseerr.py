@@ -91,6 +91,9 @@ class Overseerr(object):
         # return self._request_connection(f"search?query={query}&page=1&language=en").json()
         return
 
+    def get_poster_url(self, path):
+        return ("https://image.tmdb.org/t/p/w300_and_h450_bestv2" + path)
+
     def request_movie(self, movie_id):
         data = {
             "mediaType": "movie",
@@ -166,6 +169,7 @@ class Overseerr(object):
                 "last_request_status": request["status"],
                 "last_request_created": request["createdAt"],
                 "last_request_title": movie_data["title"],
+                "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
                 "last_request_type": request["type"],
                 "last_request_username": request["requestedBy"]["username"],
             }
@@ -187,6 +191,7 @@ class Overseerr(object):
                 "last_request_status": request["status"],
                 "last_request_created": request["createdAt"],
                 "last_request_title": tv_data["name"],
+                "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
                 "last_request_type": request["type"],
                 "last_request_username": request["requestedBy"]["username"],
             }
@@ -236,6 +241,7 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_title": tv_data["name"],
+                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"],
                 }
@@ -247,6 +253,7 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_title": movie_data["title"],
+                    "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"],
                 }
@@ -269,6 +276,7 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_title": tv_data["name"],
+                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"],
                 }
@@ -280,6 +288,7 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_title": movie_data["title"],
+                    "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"],
                 }
