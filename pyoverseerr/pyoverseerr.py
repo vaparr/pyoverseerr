@@ -108,17 +108,17 @@ class Overseerr(object):
 
             if request["type"] == "tv":
                 tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-                return_array += {               
+                return_array.update({
                     "last_request_title": tv_data["name"],
                     "last_request_poster": self.get_poster_url(tv_data["posterPath"]),                  
-                }
+                })
 
             if request["type"] == "movie":
                 movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-                return_array += {                  
+                return_array.update({                  
                     "last_request_title": movie_data["title"],
                     "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
-                }
+                })
             return return_array
         return Non
                 
