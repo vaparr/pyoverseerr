@@ -159,20 +159,7 @@ class Overseerr(object):
         tmdb_id = None
         for request in requests:
             if request["type"] == "movie":
-                tmdb_id = request["media"]["tmdbId"]
-                break
-
-        if tmdb_id is not None:
-            movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-            return {
-                "last_request_id": request["id"],
-                "last_request_status": request["status"],
-                "last_request_created": request["createdAt"],
-                "last_request_title": movie_data["title"],
-                "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
-                "last_request_type": request["type"],
-                "last_request_username": request["requestedBy"]["username"],
-            }
+                return create_request_object(request)      
         return None
 
     @property
@@ -181,22 +168,9 @@ class Overseerr(object):
         tmdb_id = None
         for request in requests:
             if request["type"] == "tv":
-                tmdb_id = request["media"]["tmdbId"]
-                break
-
-        if tmdb_id is not None:
-            tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-            return {
-                "last_request_id": request["id"],
-                "last_request_status": request["status"],
-                "last_request_created": request["createdAt"],
-                "last_request_title": tv_data["name"],
-                "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
-                "last_request_type": request["type"],
-                "last_request_username": request["requestedBy"]["username"],
-            }
-
-        return None
+                return create_request_object(request)
+        return None        
+      
 
     @property
     def tv_requests(self):
@@ -226,74 +200,48 @@ class Overseerr(object):
         return len(self._request_connection("Request?filter=pending").json()["results"])
 
     @property
-    def last_pending_request(self):
-        requests = self._request_connection("Request?filter=pending").json()["results"]
-        tmdb_id = None
-        for request in requests:
-            tmdb_id = request["media"]["tmdbId"]
-            break
-
+    def create_request_object(self, request):
+        tmdb_id = request["media"]["tmdbId"]
         if tmdb_id is not None:
-            if request["type"] == "tv":
-                tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-                return {
+
+            return_array = {
                     "last_request_id": request["id"],
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
-                    "last_request_title": tv_data["name"],
-                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
                     "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"],
+                    "last_request_username": request["requestedBy"]["username"]
+            }
+
+            if request["type"] == "tv":
+                tv_data = self._request_connection(f"tv/{tmdb_id}").json()
+                return_array += {               
+                    "last_request_title": tv_data["name"],
+                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),                  
                 }
 
             if request["type"] == "movie":
                 movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-                return {
-                    "last_request_id": request["id"],
-                    "last_request_status": request["status"],
-                    "last_request_created": request["createdAt"],
+                return_array += {                  
                     "last_request_title": movie_data["title"],
                     "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
-                    "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"],
                 }
+            return return_array
+        return None        
 
+    @property
+    def last_pending_request(self):
+        requests = self._request_connection("Request?filter=pending").json()["results"]
+        for request in requests:
+            return create_request_object(request)
         return None
-
+     
     @property
     def last_total_request(self):
         requests = self._request_connection("Request").json()["results"]
         tmdb_id = None
         for request in requests:
-            tmdb_id = request["media"]["tmdbId"]
-            break
-
-        if tmdb_id is not None:
-            if request["type"] == "tv":
-                tv_data = self._request_connection(f"tv/{tmdb_id}").json()
-                return {
-                    "last_request_id": request["id"],
-                    "last_request_status": request["status"],
-                    "last_request_created": request["createdAt"],
-                    "last_request_title": tv_data["name"],
-                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
-                    "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"],
-                }
-
-            if request["type"] == "movie":
-                movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-                return {
-                    "last_request_id": request["id"],
-                    "last_request_status": request["status"],
-                    "last_request_created": request["createdAt"],
-                    "last_request_title": movie_data["title"],
-                    "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
-                    "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"],
-                }
-
-        return None
+            return create_request_object(request)
+        return None        
 
     @property
     def approved_requests(self):
