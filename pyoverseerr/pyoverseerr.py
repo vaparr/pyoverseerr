@@ -120,7 +120,7 @@ class Overseerr(object):
                     "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
                 })
             return return_array
-        return Non
+        return None
                 
     def request_movie(self, movie_id):
         data = {
