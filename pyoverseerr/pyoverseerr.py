@@ -94,7 +94,7 @@ class Overseerr(object):
     def get_poster_url(self, path):
         return ("https://image.tmdb.org/t/p/w600_and_h900_bestv2" + path)
 
-     def create_request_object(self, request):
+    def create_request_object(self, request):
         tmdb_id = request["media"]["tmdbId"]
         if tmdb_id is not None:
 
@@ -120,7 +120,8 @@ class Overseerr(object):
                     "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
                 }
             return return_array
-        return None        
+        return Non
+                
     def request_movie(self, movie_id):
         data = {
             "mediaType": "movie",
