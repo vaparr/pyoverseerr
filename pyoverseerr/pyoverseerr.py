@@ -110,7 +110,11 @@ class Overseerr(object):
                 tv_data = self._request_connection(f"tv/{tmdb_id}").json()
                 return_array.update({
                     "last_request_title": tv_data["name"],
-                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),                  
+                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
+                    "last_request_num_seasons": self.tv_get_total_num_seasons(request),
+                    "last_request_total_seasons": self.tv_get_total_num_seasons(tv_data),
+                    "last_request_all_seasons": self.tv_is_all_seasons(tv_data, request),
+                    "last_request_episode_count": self.tv_get_requested_episode_count(tv_data, request),
                 })
 
             if request["type"] == "movie":
@@ -166,6 +170,33 @@ class Overseerr(object):
 
         print(data)
         request(lambda: self._request_connection(path="request", post_data=data))
+
+    def tv_get_total_num_seasons(self, tv_data):
+        i = 0
+        for season in tv_data["seasons"]:
+            if season["seasonNumber"] == 0:
+                continue
+            i += 1
+        return i
+
+    def tv_is_all_seasons(self, tv_data, request):
+        num_seasons = self.tv_get_total_num_seasons(tv_data)
+        num_requested_seasons = self.tv_get_total_num_seasons(request)
+        if (num_seasons == num_requested_seasons):
+           return True
+        return False
+
+    def tv_get_requested_episode_count(self, tv_data, request):
+        i = 0
+        for season in request["seasons"]:
+            if season["seasonNumber"] == 0:
+                continue
+            for tv_season in tv_data["seasons"]:
+                if tv_season["seasonNumber"] == season["seasonNumber"]:
+                    i += tv_season["episodeCount"]
+                    break
+        return i
+        
 
     def request_music(self, album_id):
         # data = {"foreignAlbumId": album_id}
