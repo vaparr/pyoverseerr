@@ -92,7 +92,7 @@ class Overseerr(object):
         return
 
     def get_poster_url(self, path):
-        return ("https://image.tmdb.org/t/p/w300_and_h450_bestv2" + path)
+        return ("https://image.tmdb.org/t/p/w600_and_h900_bestv2" + path)
 
     def request_movie(self, movie_id):
         data = {
