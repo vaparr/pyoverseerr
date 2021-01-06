@@ -187,7 +187,7 @@ class Overseerr(object):
         tmdb_id = None
         for request in requests:
             if request["type"] == "movie":
-                return create_request_object(request)      
+                return self.create_request_object(request)      
         return None
 
     @property
@@ -196,7 +196,7 @@ class Overseerr(object):
         tmdb_id = None
         for request in requests:
             if request["type"] == "tv":
-                return create_request_object(request)
+                return self.create_request_object(request)
         return None        
       
 
@@ -231,7 +231,7 @@ class Overseerr(object):
     def last_pending_request(self):
         requests = self._request_connection("Request?filter=pending").json()["results"]
         for request in requests:
-            return create_request_object(request)
+            return self.create_request_object(request)
         return None
      
     @property
@@ -239,7 +239,7 @@ class Overseerr(object):
         requests = self._request_connection("Request").json()["results"]
         tmdb_id = None
         for request in requests:
-            return create_request_object(request)
+            return self.create_request_object(request)
         return None        
 
     @property
