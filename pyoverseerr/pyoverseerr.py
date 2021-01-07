@@ -21,20 +21,22 @@ class Overseerr(object):
         self._base_url = _BASE_URL.format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
 
         self._api_key = api_key
-        self._username = username
-        self._password = password
         self._auth = None
 
     def test_connection(self):
         print("Testing connection to Overseerr @", self._base_url)
-        self._request_connection(path="Settings/Public")
+        settings = self._request_connection(path="Settings/Main")
+        if (settings['applicationUrl']) is None:
+            return "http{ssl}://{host}:{port}/{urlbase}/".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
+        return settings['applicationUrl']
+
 
     def _request_connection(self, path, post_data=None, auth=True):
 
         import requests
 
         url = f"{self._base_url}{path}"
-        headers = {"UserName": self._username}
+        headers = {}
 
         if auth:
             headers.update(**self._auth)
@@ -95,6 +97,9 @@ class Overseerr(object):
         return ("https://image.tmdb.org/t/p/w600_and_h900_bestv2" + path)
 
     def create_request_object(self, request):
+        if (self._applicationUrl is None):
+            self._applicationUrl = self.test_connection()
+
         tmdb_id = request["media"]["tmdbId"]
         if tmdb_id is not None:
 
@@ -104,6 +109,7 @@ class Overseerr(object):
                     "last_request_created": request["createdAt"],
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"]
+                    "last_request_url": "{url}{type}/{id}".format.format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
 
             if request["type"] == "tv":
@@ -215,7 +221,6 @@ class Overseerr(object):
     @property
     def last_movie_request(self):
         requests = self._request_connection("Request").json()["results"]
-        tmdb_id = None
         for request in requests:
             if request["type"] == "movie":
                 return self.create_request_object(request)      
@@ -224,7 +229,6 @@ class Overseerr(object):
     @property
     def last_tv_request(self):
         requests = self._request_connection("Request").json()["results"]
-        tmdb_id = None
         for request in requests:
             if request["type"] == "tv":
                 return self.create_request_object(request)
@@ -268,7 +272,6 @@ class Overseerr(object):
     @property
     def last_total_request(self):
         requests = self._request_connection("Request").json()["results"]
-        tmdb_id = None
         for request in requests:
             return self.create_request_object(request)
         return None        
