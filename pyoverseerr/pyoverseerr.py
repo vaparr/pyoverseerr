@@ -22,10 +22,11 @@ class Overseerr(object):
 
         self._api_key = api_key
         self._auth = None
+        self._applicationUrl = None
 
     def test_connection(self):
         print("Testing connection to Overseerr @", self._base_url)
-        settings = self._request_connection(path="Settings/Main")
+        settings = self._request_connection(path="Settings/Main").json()
         if (settings['applicationUrl']) is None:
             return "http{ssl}://{host}:{port}/{urlbase}/".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
         return settings['applicationUrl']
@@ -108,8 +109,8 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"]
-                    "last_request_url": "{url}{type}/{id}".format.format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
+                    "last_request_username": request["requestedBy"]["username"],
+                    "last_request_url": "{url}{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
 
             if request["type"] == "tv":
