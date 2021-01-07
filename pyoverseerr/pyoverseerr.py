@@ -27,7 +27,7 @@ class Overseerr(object):
     def test_connection(self):
         print("Testing connection to Overseerr @", self._base_url)
         settings = self._request_connection(path="Settings/Main").json()
-        if (settings['applicationUrl']) is None:
+        if (settings['applicationUrl'] == ""):
             return "http{ssl}://{host}:{port}/{urlbase}/".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
         return settings['applicationUrl']
 
