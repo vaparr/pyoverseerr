@@ -19,6 +19,7 @@ class Overseerr(object):
     def __init__(self, ssl, username, host, port, urlbase="", api_key=None, password=None):
 
         self._base_url = _BASE_URL.format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
+        self._app_base = "http{ssl}://{host}:{port}/{urlbase}/".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
 
         self._api_key = api_key
         self._auth = None
@@ -28,7 +29,7 @@ class Overseerr(object):
         print("Testing connection to Overseerr @", self._base_url)
         settings = self._request_connection(path="Settings/Main").json()
         if (settings['applicationUrl'] == ""):
-            return "http{ssl}://{host}:{port}/{urlbase}/".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
+            return self._app_base
         return settings['applicationUrl']
 
 
