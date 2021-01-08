@@ -19,7 +19,8 @@ class Overseerr(object):
     def __init__(self, ssl, username, host, port, urlbase="", api_key=None, password=None):
 
         self._base_url = _BASE_URL.format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
-        self._app_base = "http{ssl}://{host}:{port}/{urlbase}".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
+        self._app_base = "http{ssl}://{host}:{port}".format(ssl="s" if ssl else "", host=host, port=port)
+#        self._app_base = "http{ssl}://{host}:{port}/{urlbase}".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
 
         self._api_key = api_key
         self._auth = None
@@ -111,7 +112,7 @@ class Overseerr(object):
                     "last_request_created": request["createdAt"],
                     "last_request_type": request["type"],
                     "last_request_username": request["requestedBy"]["username"],
-                    "last_request_url": "{url}{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
+                    "last_request_url": "{url}/{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
 
             if request["type"] == "tv":
