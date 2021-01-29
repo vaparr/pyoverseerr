@@ -38,7 +38,10 @@ class Overseerr(object):
 
         import requests
 
-        url = f"{self._base_url}{path}"
+        if self._base_url.endswith("/"):
+            url = f"{self._base_url}{path}"
+        else:
+            url = f"{self._base_url}/{path}"
         headers = {}
 
         if auth:
