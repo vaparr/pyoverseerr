@@ -114,7 +114,7 @@ class Overseerr(object):
                     "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_type": request["type"],
-                    "last_request_username": request["requestedBy"]["username"],
+                    "last_request_username": request["requestedBy"]["displayName"],
                     "last_request_url": "{url}/{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
 
