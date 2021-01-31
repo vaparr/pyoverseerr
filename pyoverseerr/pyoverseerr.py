@@ -111,12 +111,21 @@ class Overseerr(object):
 
             return_array = {
                     "last_request_id": request["id"],
-                    "last_request_status": request["status"],
                     "last_request_created": request["createdAt"],
                     "last_request_type": request["type"],
+                    "last_request_is4k": request["is4k"],
                     "last_request_username": request["requestedBy"]["displayName"],
                     "last_request_url": "{url}/{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
+       
+            if request["is4k"] == True:
+                return_array.update({
+                    "last_request_status": request["status4k"],
+                })
+            else:
+                return_array.update({
+                    "last_request_status": request["status"],
+                })
 
             if request["type"] == "tv":
                 tv_data = self._request_connection(f"tv/{tmdb_id}").json()
