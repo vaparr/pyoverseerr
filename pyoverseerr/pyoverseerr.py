@@ -120,7 +120,7 @@ class Overseerr(object):
        
             if request["is4k"] == True:
                 return_array.update({
-                    "last_request_status": request["status4k"],
+                    "last_request_status": request["status"],
                 })
             else:
                 return_array.update({
