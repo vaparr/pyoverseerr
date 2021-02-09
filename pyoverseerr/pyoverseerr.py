@@ -157,7 +157,7 @@ class Overseerr(object):
 
     def update_request(self, request_id, status):
         """Status = pending/approve/decline/available"""
-        request(lambda: self._request_connection(path=f"request/{request_id}/{status}"))
+        request(lambda: self._request_connection(path=f"request/{request_id}/{status}", post_data={}))        
 
     def request_tv(self, tv_id, request_all=False, request_latest=False, request_first=False):
 
