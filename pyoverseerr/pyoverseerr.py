@@ -5,7 +5,7 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 _BASE_URL = "http{ssl}://{host}:{port}/{urlbase}api/v1/"
-
+_TAKE_COUNT = 1000
 
 def request(f):
     r = f().json()
@@ -226,7 +226,7 @@ class Overseerr(object):
 
     @property
     def movie_requests(self):
-        requests = self._request_connection("Request").json()["results"]
+        requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
         i = 0
         for request in requests:
             if request["type"] == "movie":
@@ -252,7 +252,7 @@ class Overseerr(object):
 
     @property
     def tv_requests(self):
-        requests = self._request_connection("Request").json()["results"]
+        requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
         i = 0
         for request in requests:
             if request["type"] == "tv":
@@ -267,15 +267,15 @@ class Overseerr(object):
 
     @property
     def total_requests(self):
-        return len(self._request_connection("Request").json()["results"])
+        return len(self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"])
 
     @property
     def available_requests(self):
-        return len(self._request_connection("Request?filter=available").json()["results"])
+        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=available").json()["results"])
 
     @property
     def pending_requests(self):
-        return len(self._request_connection("Request?filter=pending").json()["results"])
+        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=pending").json()["results"])
 
     @property
     def last_pending_request(self):
@@ -293,11 +293,11 @@ class Overseerr(object):
 
     @property
     def approved_requests(self):
-        return len(self._request_connection("Request?filter=approved").json()["results"])
+        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=approved").json()["results"])
 
     @property
     def unavailable_requests(self):
-        return len(self._request_connection("Request?filter=unavailable").json()["results"])
+        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=unavailable").json()["results"])
 
 
 class OverseerrError(Exception):
