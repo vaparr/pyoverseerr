@@ -131,7 +131,7 @@ class Overseerr(object):
                 tv_data = self._request_connection(f"tv/{tmdb_id}").json()
                 return_array.update({
                     "last_request_title": tv_data["name"],
-                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]),
+                    "last_request_poster": self.get_poster_url(tv_data["posterPath"]) if tv_data["posterPath"] is not None else '',
                     "last_request_num_seasons": self.tv_get_total_num_seasons(request),
                     "last_request_total_seasons": self.tv_get_total_num_seasons(tv_data),
                     "last_request_all_seasons": self.tv_is_all_seasons(tv_data, request),
@@ -142,7 +142,7 @@ class Overseerr(object):
                 movie_data = self._request_connection(f"movie/{tmdb_id}").json()
                 return_array.update({                  
                     "last_request_title": movie_data["title"],
-                    "last_request_poster": self.get_poster_url(movie_data["posterPath"]),
+                    "last_request_poster": self.get_poster_url(movie_data["posterPath"]) if movie_data["posterPath"] is not None else '',
                 })
             return return_array
         return None
