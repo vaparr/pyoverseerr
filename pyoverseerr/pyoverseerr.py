@@ -224,15 +224,20 @@ class Overseerr(object):
         # request(lambda: self._request_connection(path="Request/music", post_data=data))
         return
 
+    #@property
+    #def movie_requests(self):
+    #    requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
+    #    for request in requests:
+    #    i = 0
+    #        if request["type"] == "movie":
+    #            i += 1
+    #    return i
+
     @property
     def movie_requests(self):
-        requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
-        i = 0
-        for request in requests:
-            if request["type"] == "movie":
-                i += 1
-        return i
-
+        requests = self._request_connection(f"Request/count").json()["movie"]
+       
+        return requests
     @property
     def last_movie_request(self):
         requests = self._request_connection("Request").json()["results"]
@@ -252,12 +257,9 @@ class Overseerr(object):
 
     @property
     def tv_requests(self):
-        requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
-        i = 0
-        for request in requests:
-            if request["type"] == "tv":
-                i += 1
-        return i
+        requests = self._request_connection(f"Request/count").json()["tv"]
+       
+        return requests
 
     @property
     def music_requests(self):
@@ -267,15 +269,21 @@ class Overseerr(object):
 
     @property
     def total_requests(self):
-        return len(self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"])
+        requests = self._request_connection(f"Request/count").json()["total"]
+       
+        return requests
 
     @property
     def available_requests(self):
-        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=available").json()["results"])
+        requests = self._request_connection(f"Request/count").json()["available"]
+       
+        return requests
 
     @property
     def pending_requests(self):
-        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=pending").json()["results"])
+        requests = self._request_connection(f"Request/count").json()["pending"]
+       
+        return requests
 
     @property
     def last_pending_request(self):
@@ -293,12 +301,70 @@ class Overseerr(object):
 
     @property
     def approved_requests(self):
-        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=approved").json()["results"])
+        requests = self._request_connection(f"Request/count").json()["approved"]
+       
+        return requests
 
     @property
     def unavailable_requests(self):
-        return len(self._request_connection(f"Request?take={_TAKE_COUNT}&filter=unavailable").json()["results"])
+        requests = self._request_connection(f"Request/count").json()["processing"]
+       
+        return requests
 
+    @property
+    def declined_requests(self):
+        requests = self._request_connection(f"Request/count").json()["declined"]
+       
+        return requests
 
+    @property
+    def requestCounts(self):
+        requests = self._request_connection(f"Request/count").json()
+       
+        return requests
+
+    @property
+    def issueCounts(self):
+        requests = self._request_connection(f"issue/count").json()
+       
+        return requests        
+
+    @property
+    def last_open_issue(self):
+        requests = self._request_connection(f"issue?filter=open").json()["results"]
+        for request in requests:
+            return request
+                   
+        return None
+
+    @property
+    def last_issue(self):
+        requests = self._request_connection(f"issue").json()["results"]
+        for request in requests:
+            return request
+                   
+        return None
+        
 class OverseerrError(Exception):
     pass
+
+
+
+
+overseerr = Overseerr(ssl=False, username= "", host="192.168.1.62", port=5055, api_key="MTYwODIzNjM2ODA4Njk1YmNjODYzLTI0OTMtNGExMS1hNzIwLTAyYzhhYjk0MjE4Mw==")
+
+overseerr.authenticate()
+print(overseerr.movie_requests)
+print(overseerr.last_movie_request)
+print(overseerr.last_tv_request)
+print(overseerr.tv_requests)
+print(overseerr.total_requests)
+print(overseerr.available_requests)
+print(overseerr.pending_requests)
+print(overseerr.approved_requests)
+print(overseerr.unavailable_requests)
+print(overseerr.declined_requests)
+print(overseerr.requestCounts)
+print(overseerr.issueCounts)
+print(overseerr.last_open_issue)
+print(overseerr.last_issue)
