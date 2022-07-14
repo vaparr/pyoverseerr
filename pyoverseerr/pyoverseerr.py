@@ -339,7 +339,7 @@ class Overseerr(object):
 
     @property
     def last_issue(self):
-        requests = self._request_connection(f"issue").json()["results"]
+        requests = self._request_connection(f"issue?filter=all").json()["results"]
         for request in requests:
             return request
                    
