@@ -329,13 +329,14 @@ class Overseerr(object):
     @property
     def issueCounts(self):
         try:
-            icount = self._request_connection(f"issue/count").json()
+            icounts = self._request_connection(f"issue/count").json()
         except:
             icount = 0
             requests = self._request_connection(f"issue?filter=open").json()["results"]
             for request in requests:
                 icount = icount + 1
-        return icount
+            return ({'total': icount, 'video' : 0, 'audio' : 0, 'subtitles' : 0, 'open' : icount, 'closed' : 0 })
+        return icounts
 
     @property
     def last_open_issue(self):
@@ -357,3 +358,23 @@ class Overseerr(object):
 class OverseerrError(Exception):
     pass
 
+overseerr = Overseerr(ssl=False, username="", host="192.168.1.62", port=5055,
+                      api_key="MTYwODIzNjM2ODA4Njk1YmNjODYzLTI0OTMtNGExMS1hNzIwLTAyYzhhYjk0MjE4Mw==")
+
+overseerr.authenticate()
+print(overseerr.movie_requests)
+print(overseerr.last_movie_request)
+print(overseerr.last_tv_request)
+print(overseerr.tv_requests)
+print(overseerr.total_requests)
+print(overseerr.available_requests)
+print(overseerr.pending_requests)
+print(overseerr.approved_requests)
+print(overseerr.unavailable_requests)
+print(overseerr.declined_requests)
+print(overseerr.requestCounts)
+print("issueCount")
+print(overseerr.issueCounts)
+
+print(overseerr.last_open_issue)
+print(overseerr.last_issue)
