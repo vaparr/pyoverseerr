@@ -7,6 +7,7 @@ _LOGGER = logging.getLogger(__name__)
 _BASE_URL = "http{ssl}://{host}:{port}/{urlbase}api/v1/"
 _TAKE_COUNT = 1000
 
+
 def request(f):
     r = f().json()
     print("return:", r)
@@ -18,8 +19,10 @@ class Overseerr(object):
 
     def __init__(self, ssl, username, host, port, urlbase="", api_key=None, password=None):
 
-        self._base_url = _BASE_URL.format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
-        self._app_base = "http{ssl}://{host}:{port}".format(ssl="s" if ssl else "", host=host, port=port)
+        self._base_url = _BASE_URL.format(
+            ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
+        self._app_base = "http{ssl}://{host}:{port}".format(
+            ssl="s" if ssl else "", host=host, port=port)
 #        self._app_base = "http{ssl}://{host}:{port}/{urlbase}".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
 
         self._api_key = api_key
@@ -32,7 +35,6 @@ class Overseerr(object):
         if (settings['applicationUrl'] == ""):
             return self._app_base
         return settings['applicationUrl']
-
 
     def _request_connection(self, path, post_data=None, auth=True):
 
@@ -51,7 +53,7 @@ class Overseerr(object):
             if post_data is None:
                 res = requests.get(url=url, headers=headers, timeout=8)
             else:
-                res = requests.post(url=url, headers=headers, json=post_data, timeout=8)
+                res = requests.post(url=url, headers=headers,json=post_data, timeout=8)
 
             res.raise_for_status()
             res.json()
@@ -61,7 +63,8 @@ class Overseerr(object):
         except TypeError:
             raise OverseerrError("No authentication type set.")
         except requests.exceptions.Timeout:
-            raise OverseerrError("Request timed out. Check port configuration.")
+            raise OverseerrError(
+                "Request timed out. Check port configuration.")
         except requests.exceptions.ConnectionError:
             raise OverseerrError("Connection error. Check host configuration.")
         except requests.exceptions.TooManyRedirects:
@@ -71,7 +74,7 @@ class Overseerr(object):
             if status == 401:
                 raise OverseerrError("Unauthorized error. Check authentication credentials.")
             else:
-                raise OverseerrError(f"HTTP Error {status}. Check SSL configuration. {res.json()}")
+                raise OverseerrError(f"HTTP Error {status}. {res.json()}")
         except ValueError:
             raise OverseerrError("ValueError. Check urlbase configuration.")
 
@@ -110,14 +113,14 @@ class Overseerr(object):
         if tmdb_id is not None:
 
             return_array = {
-                    "last_request_id": request["id"],
-                    "last_request_created": request["createdAt"],
-                    "last_request_type": request["type"],
-                    "last_request_is4k": request["is4k"],
-                    "last_request_username": request["requestedBy"]["displayName"],
-                    "last_request_url": "{url}/{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
+                "last_request_id": request["id"],
+                "last_request_created": request["createdAt"],
+                "last_request_type": request["type"],
+                "last_request_is4k": request["is4k"],
+                "last_request_username": request["requestedBy"]["displayName"],
+                "last_request_url": "{url}/{type}/{id}".format(url=self._applicationUrl, type=request["type"], id=tmdb_id)
             }
-       
+
             if request["is4k"] == True:
                 return_array.update({
                     "last_request_status": request["status"],
@@ -139,14 +142,15 @@ class Overseerr(object):
                 })
 
             if request["type"] == "movie":
-                movie_data = self._request_connection(f"movie/{tmdb_id}").json()
-                return_array.update({                  
+                movie_data = self._request_connection(
+                    f"movie/{tmdb_id}").json()
+                return_array.update({
                     "last_request_title": movie_data["title"],
                     "last_request_poster": self.get_poster_url(movie_data["posterPath"]) if movie_data["posterPath"] is not None else '',
                 })
             return return_array
         return None
-                
+
     def request_movie(self, movie_id):
         data = {
             "mediaType": "movie",
@@ -157,7 +161,7 @@ class Overseerr(object):
 
     def update_request(self, request_id, status):
         """Status = pending/approve/decline/available"""
-        request(lambda: self._request_connection(path=f"request/{request_id}/{status}", post_data={}))        
+        request(lambda: self._request_connection(path=f"request/{request_id}/{status}", post_data={}))
 
     def request_tv(self, tv_id, request_all=False, request_latest=False, request_first=False):
 
@@ -204,7 +208,7 @@ class Overseerr(object):
         num_seasons = self.tv_get_total_num_seasons(tv_data)
         num_requested_seasons = self.tv_get_total_num_seasons(request)
         if (num_seasons == num_requested_seasons):
-           return True
+            return True
         return False
 
     def tv_get_requested_episode_count(self, tv_data, request):
@@ -217,15 +221,14 @@ class Overseerr(object):
                     i += tv_season["episodeCount"]
                     break
         return i
-        
 
     def request_music(self, album_id):
         # data = {"foreignAlbumId": album_id}
         # request(lambda: self._request_connection(path="Request/music", post_data=data))
         return
 
-    #@property
-    #def movie_requests(self):
+    # @property
+    # def movie_requests(self):
     #    requests = self._request_connection(f"Request?take={_TAKE_COUNT}").json()["results"]
     #    for request in requests:
     #    i = 0
@@ -236,14 +239,15 @@ class Overseerr(object):
     @property
     def movie_requests(self):
         requests = self._request_connection(f"Request/count").json()["movie"]
-       
+
         return requests
+
     @property
     def last_movie_request(self):
         requests = self._request_connection("Request").json()["results"]
         for request in requests:
             if request["type"] == "movie":
-                return self.create_request_object(request)      
+                return self.create_request_object(request)
         return None
 
     @property
@@ -252,13 +256,12 @@ class Overseerr(object):
         for request in requests:
             if request["type"] == "tv":
                 return self.create_request_object(request)
-        return None        
-      
+        return None
 
     @property
     def tv_requests(self):
         requests = self._request_connection(f"Request/count").json()["tv"]
-       
+
         return requests
 
     @property
@@ -270,19 +273,19 @@ class Overseerr(object):
     @property
     def total_requests(self):
         requests = self._request_connection(f"Request/count").json()["total"]
-       
+
         return requests
 
     @property
     def available_requests(self):
         requests = self._request_connection(f"Request/count").json()["available"]
-       
+
         return requests
 
     @property
     def pending_requests(self):
         requests = self._request_connection(f"Request/count").json()["pending"]
-       
+
         return requests
 
     @property
@@ -291,50 +294,55 @@ class Overseerr(object):
         for request in requests:
             return self.create_request_object(request)
         return None
-     
+
     @property
     def last_total_request(self):
         requests = self._request_connection("Request").json()["results"]
         for request in requests:
             return self.create_request_object(request)
-        return None        
+        return None
 
     @property
     def approved_requests(self):
         requests = self._request_connection(f"Request/count").json()["approved"]
-       
+
         return requests
 
     @property
     def unavailable_requests(self):
         requests = self._request_connection(f"Request/count").json()["processing"]
-       
+
         return requests
 
     @property
     def declined_requests(self):
         requests = self._request_connection(f"Request/count").json()["declined"]
-       
+
         return requests
 
     @property
     def requestCounts(self):
         requests = self._request_connection(f"Request/count").json()
-       
+
         return requests
 
     @property
     def issueCounts(self):
-        requests = self._request_connection(f"issue/count").json()
-       
-        return requests        
+        try:
+            icount = self._request_connection(f"issue/count").json()
+        except:
+            icount = 0
+            requests = self._request_connection(f"issue?filter=open").json()["results"]
+            for request in requests:
+                icount = icount + 1
+        return icount
 
     @property
     def last_open_issue(self):
         requests = self._request_connection(f"issue?filter=open").json()["results"]
         for request in requests:
             return request
-                   
+
         return None
 
     @property
@@ -342,8 +350,10 @@ class Overseerr(object):
         requests = self._request_connection(f"issue?filter=all").json()["results"]
         for request in requests:
             return request
-                   
+
         return None
-        
+
+
 class OverseerrError(Exception):
     pass
+
