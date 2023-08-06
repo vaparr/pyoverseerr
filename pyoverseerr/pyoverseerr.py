@@ -17,14 +17,8 @@ def request(f):
 class Overseerr(object):
     """A class for handling connections with an Overseerr instance."""
 
-    def __init__(self, ssl, username, host, port, urlbase="", api_key=None, password=None):
-
-        self._base_url = _BASE_URL.format(
-            ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
-        self._app_base = "http{ssl}://{host}:{port}".format(
-            ssl="s" if ssl else "", host=host, port=port)
-#        self._app_base = "http{ssl}://{host}:{port}/{urlbase}".format(ssl="s" if ssl else "", host=host, port=port, urlbase=urlbase)
-
+    def __init__(self, url, api_key=None):
+        self._base_url = _BASE_URL.format(url=url)
         self._api_key = api_key
         self._auth = None
         self._applicationUrl = None
