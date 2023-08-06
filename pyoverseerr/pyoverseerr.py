@@ -4,7 +4,6 @@ import json
 import logging
 
 _LOGGER = logging.getLogger(__name__)
-_BASE_URL = "http{ssl}://{host}:{port}/{urlbase}api/v1/"
 _TAKE_COUNT = 1000
 
 
@@ -18,7 +17,7 @@ class Overseerr(object):
     """A class for handling connections with an Overseerr instance."""
 
     def __init__(self, url, api_key=None):
-        self._base_url = _BASE_URL.format(url=url)
+        self._base_url = "{url}/api/v1/".format(url=url)
         self._api_key = api_key
         self._auth = None
         self._applicationUrl = None
